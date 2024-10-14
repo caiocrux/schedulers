@@ -33,8 +33,8 @@
 #include <vector>
 #include <Task.h> 
 #include <GanttChart.h>
-//namespace plt = matplotlibcpp;
-
+#include <rateMonotonic.h>
+/*
 class RateMonotonic {
    private:
     std::vector<Task> m_tasks;
@@ -114,7 +114,7 @@ class RateMonotonic {
         return schedule;
     }
 };
-
+*/
 class DeadlineMonotonic {
    private:
     std::vector<Task> m_tasks;
@@ -359,75 +359,6 @@ class LeastLaxity {
         return schedule;
     }
 };
-/*
-class GanttChart {
-   public:
-    void saveToCSV(const std::vector<int> &schedule,
-                   const std::string &filename) {
-        std::ofstream file(filename);
-        if (!file.is_open()) {
-            std::cerr << "Error opening file: " << filename << std::endl;
-            return;
-        }
-
-        file << "Time,TaskID\n";  // CSV header
-        for (size_t t = 0; t < schedule.size(); ++t) {
-            file << t << "," << schedule[t] << "\n";
-        }
-        file.close();
-    }
-    // Método para desenhar o diagrama de Gantt usando matplotlib
-    void drawGanttChart(const std::vector<int> &schedule, std::string tittle) {
-        std::map<int, std::vector<int>>
-            task_times;               // Armazena os intervalos para cada tarefa
-        std::vector<int> idle_times;  // Armazena intervalos ociosos
-
-        for (size_t t = 0; t < schedule.size(); ++t) {
-            int task_id = schedule[t];
-            if (task_id != -1) {
-                task_times[task_id].push_back(t);
-            } else {
-                idle_times.push_back(t);
-            }
-        }
-
-        // Desenhar cada tarefa no Gantt
-        for (const auto &[task_id, times] : task_times) {
-            std::vector<double> x, y;
-            for (const auto &time : times) {
-                x.push_back(time);
-                y.push_back(task_id);
-            }
-
-            plt::scatter(x, y, 50,
-                         {{"label", "Task " + std::to_string(task_id)}});
-        }
-
-        // Desenhar tempos de ociosidade (IDLE)
-        if (!idle_times.empty()) {
-            std::vector<double> idle_x(idle_times.begin(), idle_times.end());
-            std::vector<double> idle_y(idle_times.size(),
-                                       0);  // IDLE será representado em Y=0
-
-            plt::scatter(idle_x, idle_y, 50,
-                         {{"label", "IDLE"}, {"color", "gray"}});
-        }
-
-        // Definir o título e os rótulos
-        plt::title(tittle);
-        plt::xlabel("Time");
-        plt::ylabel("Task ID");
-
-        // Adicionar legenda
-        plt::legend();
-        // Save the chart to a file instead of showing it
-        plt::show();
-        // Clear the figure after saving (optional)
-        plt::clf();
-    }
-};
-
-*/
 // int main(int argc, char **argv) {
 int main(void) {
     //  int n;
