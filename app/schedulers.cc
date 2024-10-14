@@ -21,7 +21,7 @@
  *
  */
 
-#include <matplotlibcpp.h>
+//#include <matplotlibcpp.h>
 
 #include <algorithm>
 #include <cmath>
@@ -32,44 +32,9 @@
 #include <optional>  // std::optional
 #include <vector>
 #include <Task.h> 
-namespace plt = matplotlibcpp;
-/*
-class Task {
-   private:
-    int m_id;
-    int m_executionTime;
-    int m_period;
-    int m_deadline;
-    int m_remaining;
-    int m_next_deadline;
+#include <GanttChart.h>
+//namespace plt = matplotlibcpp;
 
-   public:
-    explicit Task(int id, int executionTime, int period, int deadline)
-        : m_id(id),
-          m_executionTime(executionTime),
-          m_period(period),
-          m_deadline(deadline),
-          m_remaining(0),
-          m_next_deadline(deadline) {}
-
-    // Getters
-    int getId() const { return m_id; }
-    int getC() const { return m_executionTime; }
-    int getT() const { return m_period; }
-    int getD() const { return m_deadline; }
-    int getRemaining() const { return m_remaining; }
-    int getNextDeadline() const { return m_next_deadline; }
-
-    // Setters
-    void setRemaining(int r) { m_remaining = r; }
-    void setNextDeadline(int deadline) { m_next_deadline = deadline; }
-
-    virtual void print_task() const {
-        std::cout << "Task ID: " << m_id << ", C: " << m_executionTime
-                  << ", P: " << m_period << ", D: " << m_deadline << "\n";
-    }
-};
-*/
 class RateMonotonic {
    private:
     std::vector<Task> m_tasks;
@@ -394,7 +359,7 @@ class LeastLaxity {
         return schedule;
     }
 };
-
+/*
 class GanttChart {
    public:
     void saveToCSV(const std::vector<int> &schedule,
@@ -461,6 +426,8 @@ class GanttChart {
         plt::clf();
     }
 };
+
+*/
 // int main(int argc, char **argv) {
 int main(void) {
     //  int n;
