@@ -31,9 +31,9 @@
 #include <numeric>   // std::lcm
 #include <optional>  // std::optional
 #include <vector>
-
+#include <Task.h> 
 namespace plt = matplotlibcpp;
-
+/*
 class Task {
    private:
     int m_id;
@@ -69,7 +69,7 @@ class Task {
                   << ", P: " << m_period << ", D: " << m_deadline << "\n";
     }
 };
-
+*/
 class RateMonotonic {
    private:
     std::vector<Task> m_tasks;
