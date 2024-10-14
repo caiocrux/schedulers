@@ -1,3 +1,5 @@
 add_subdirectory(task)
 add_subdirectory(gantt)
 add_subdirectory(rateMonotonic)
+add_subdirectory(deadlineMonotonic)
+add_subdirectory(earliestDeadlineFirst)

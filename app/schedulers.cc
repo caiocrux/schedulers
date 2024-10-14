@@ -21,8 +21,12 @@
  *
  */
 
-//#include <matplotlibcpp.h>
-
+#include <GanttChart.h>
+#include <Task.h>
+#include <deadlineMonotonic.h>
+#include <rateMonotonic.h>
+#include <rateMonotonic.h>
+#include <earliestDeadlineFirst.h>
 #include <algorithm>
 #include <cmath>
 #include <fstream>  // for file output
@@ -31,264 +35,6 @@
 #include <numeric>   // std::lcm
 #include <optional>  // std::optional
 #include <vector>
-#include <Task.h> 
-#include <GanttChart.h>
-#include <rateMonotonic.h>
-/*
-class RateMonotonic {
-   private:
-    std::vector<Task> m_tasks;
-    int m_lcm;
-
-   public:
-    // Construtor
-    explicit RateMonotonic(const std::vector<Task> &tasks_input)
-        : m_tasks(tasks_input), m_lcm(1) {}
-    // Method to calculate LCM
-    void calculateLcmFromPeriods(void) {
-        m_lcm = 1;
-        for (const auto &task : m_tasks) {
-            // Least Common Multiple (LCM) of two numbers.
-            // Only works for C++17 and above
-            m_lcm = std::lcm(m_lcm, task.getT());
-        }
-        std::cout << "LCM: " << m_lcm << std::endl;
-    }
-    // Method to check if the task are schedulable
-    // std::optional is a feature introduced in C++ 17 which is used to
-    // represent optional values i.e. the possibility of having a value or
-    // not having a value in a type-safe manner.
-
-    std::optional<bool> isSchedulable() const {
-        double U = 0;
-        int n = m_tasks.size();
-        // calculate Utotal
-        for (const auto &task : m_tasks) {
-            U += static_cast<double>(task.getC()) / task.getT();
-        }
-        // calculate Umax
-        double bound = n * (std::pow(2.0, 1.0 / n) - 1);
-        std::cout << "Utotal: " << U << std::endl;
-        std::cout << "Umax: " << bound << std::endl;
-        return (U <= bound) ? std::optional<bool>(true)
-                            : std::optional<bool>(false);
-    }
-    // Sort tasks by period, using the Rate Monotonic scheduling algorithm.
-    // Tasks with shorter periods have higher priority.
-
-    void sortTasksByPeriod() {
-        // smaller periods come first
-        std::sort(
-            m_tasks.begin(), m_tasks.end(),
-            [](const Task &a, const Task &b) { return a.getT() < b.getT(); });
-    }
-    std::vector<int> runRateMonotonic() {
-        std::vector<int> schedule(m_lcm, -1);
-        int time = 0;
-
-        for (auto &task : m_tasks) {
-            task.setRemaining(task.getC());
-        }
-        // Simulate over time
-        while (time < m_lcm) {
-            Task *next_task = nullptr;
-            // Check for task release and reset remaining time
-            for (auto &task : m_tasks) {
-                if (time % task.getT() == 0) {
-                    task.setRemaining(task.getC());
-                }
-                if (task.getRemaining() > 0 &&
-                    (next_task == nullptr || task.getT() < next_task->getT())) {
-                    next_task = &task;
-                }
-            }
-
-            if (next_task) {
-                schedule[time] = next_task->getId();
-                next_task->setRemaining(next_task->getRemaining() - 1);
-            }
-
-            time++;
-        }
-
-        return schedule;
-    }
-};
-*/
-class DeadlineMonotonic {
-   private:
-    std::vector<Task> m_tasks;
-    int m_lcm;
-
-   public:
-    explicit DeadlineMonotonic(const std::vector<Task> &tasks_input)
-        : m_tasks(tasks_input), m_lcm(1) {}
-
-    void calculateLcmFromPeriods() {
-        m_lcm = 1;
-        for (const auto &task : m_tasks) {
-            m_lcm = std::lcm(m_lcm, task.getT());
-        }
-        std::cout << "LCM: " << m_lcm << std::endl;
-    }
-
-    // prioritize tasks based on their deadlines, starting with the earliest
-    // deadline.
-
-    void sortTasksByDeadline() {
-        std::sort(
-            m_tasks.begin(), m_tasks.end(),
-            [](const Task &a, const Task &b) { return a.getD() < b.getD(); });
-    }
-    std::optional<bool> isSchedulable() {
-        // Itera sobre cada tarefa
-        for (size_t i = 0; i < m_tasks.size(); i++) {
-            int Ri = m_tasks[i].getC();  // Tempo de resposta inicial é o
-                                         // próprio tempo de execução
-            int prev_Ri = Ri;
-
-            do {
-                prev_Ri = Ri;
-                Ri = m_tasks[i].getC();
-
-                for (size_t j = 0; j < i; ++j) {
-                    Ri += std::ceil(static_cast<double>(prev_Ri) /
-                                    m_tasks[j].getT()) *
-                          m_tasks[j].getC();
-                }
-
-                if (Ri > m_tasks[i].getD()) {
-                    std::cout << "Tarefa " << m_tasks[i].getId()
-                              << " não é escalonável. Tempo de "
-                                 "resposta: "
-                              << Ri << ", Deadline: " << m_tasks[i].getD()
-                              << std::endl;
-                    return std::optional<bool>(false);
-                }
-
-            } while (Ri != prev_Ri);
-
-            std::cout << "Tarefa " << m_tasks[i].getId()
-                      << " é escalonável. Tempo de resposta: " << Ri
-                      << ", Deadline: " << m_tasks[i].getD() << std::endl;
-        }
-
-        return std::optional<bool>(true);
-    }
-
-    std::vector<int> runDeadlineMonotonic() {
-        std::vector<int> schedule(m_lcm, -1);
-        int time = 0;
-
-        for (auto &task : m_tasks) {
-            task.setRemaining(task.getC());
-        }
-
-        while (time < m_lcm) {
-            Task *next_task = nullptr;
-
-            for (auto &task : m_tasks) {
-                if (time % task.getT() == 0) {
-                    task.setRemaining(task.getC());
-                }
-                if (task.getRemaining() > 0 &&
-                    (next_task == nullptr || task.getD() < next_task->getD())) {
-                    next_task = &task;
-                }
-            }
-
-            if (next_task) {
-                schedule[time] = next_task->getId();
-                next_task->setRemaining(next_task->getRemaining() - 1);
-            }
-
-            time++;
-        }
-
-        return schedule;
-    }
-};
-
-class EarliestDeadlineFirst {
-   private:
-    std::vector<Task> m_tasks;
-    int m_lcm;
-
-   public:
-    explicit EarliestDeadlineFirst(const std::vector<Task> &tasks_input)
-        : m_tasks(tasks_input), m_lcm(1) {}
-
-    void calculateLcmFromPeriods() {
-        m_lcm = 1;
-        for (const auto &task : m_tasks) {
-            m_lcm = std::lcm(m_lcm, task.getT());
-        }
-        std::cout << "LCM: " << m_lcm << std::endl;
-    }
-
-    // prioritize tasks based on their deadlines, starting with the earliest
-    // deadline.
-    void sortTasksByDeadline(int currentTime) {
-        std::sort(m_tasks.begin(), m_tasks.end(),
-                  [currentTime](const Task &a, const Task &b) {
-                      int deadlineA = a.getT() - (currentTime % a.getT());
-                      int deadlineB = b.getT() - (currentTime % b.getT());
-                      return deadlineA < deadlineB;
-                  });
-    }
-    std::optional<bool> isSchedulable() {
-        double U = 0;
-        char maxCore = 1;
-        // calculate Utotal
-        for (const auto &task : m_tasks) {
-            U += static_cast<double>(task.getC()) / task.getT();
-        }
-
-        std::cout << "Utotal: " << U << std::endl;
-
-        return (U <= maxCore) ? std::optional<bool>(true)
-                              : std::optional<bool>(false);
-    }
-
-    std::vector<int> runEarliestDeadlineFirst() {
-        std::vector<int> schedule(m_lcm, -1);
-        int time = 0;
-
-        for (auto &task : m_tasks) {
-            task.setRemaining(task.getC());
-        }
-
-        while (time < m_lcm) {
-            Task *next_task = nullptr;
-
-            for (auto &task : m_tasks) {
-                if (time % task.getT() == 0) {
-                    task.setRemaining(task.getC());
-                }
-            }
-
-            sortTasksByDeadline(time);
-
-            for (auto &task : m_tasks) {
-                if (task.getRemaining() > 0) {
-                    next_task = &task;
-                    break;
-                }
-            }
-
-            if (next_task) {
-                schedule[time] = next_task->getId();
-                next_task->setRemaining(next_task->getRemaining() - 1);
-            } else {
-                schedule[time] = -1;  // Means idle
-            }
-
-            time++;
-        }
-
-        return schedule;
-    }
-};
 
 class LeastLaxity {
    private:
@@ -429,10 +175,9 @@ std::vector<Task> tasks = {Task(1, 2, 10, 5),
   std::string task1_img = "Tabela_1.csv";
 #endif
 #if 1
-    std::vector<Task> tasks = {Task(1, 2, 7, 7), 
-                               Task(2, 3, 12, 12),
+    std::vector<Task> tasks = {Task(1, 2, 7, 7), Task(2, 3, 12, 12),
                                Task(3, 2, 5, 5)};
-//                               Task(3, 1, 20, 20)};
+    //                               Task(3, 1, 20, 20)};
     // Task(4, 4, 13, 13)};
     std::string task1_img = "Tabela_1.csv";
 
@@ -472,10 +217,9 @@ std::vector<Task> tasks = {Task(1, 2, 10, 5),
     auto dmSchedule = dmScheduler.runDeadlineMonotonic();
     auto edfSchedule = edfScheduler.runEarliestDeadlineFirst();
     auto llSchedule = llScheduler.runLeastLaxity();
-    // rmScheduler.drawGanttChart(schedule, task1_img);
-    // Create GanttChart object and save to CSV
+
     GanttChart ganttChart;
-    // ganttChart.saveToCSV(schedule, task1_img);
+
     ganttChart.drawGanttChart(rmSchedule, "Rate Monotonic Chart");
     ganttChart.drawGanttChart(dmSchedule, "Deadline Monotonic Chart");
     ganttChart.drawGanttChart(edfSchedule, "Earliest Deadline First Chart");
