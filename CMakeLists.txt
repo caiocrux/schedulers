@@ -23,4 +23,5 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(matplotlib-cpp)
 
+add_subdirectory(lib)
 add_subdirectory(app)

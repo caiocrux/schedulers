@@ -1,6 +1,8 @@
+set(LIB_TASK_NAME "LibTask")
 set(LIBRARY_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Task.cc")
 set(LIBRARY_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/Task.h")
+set(LIBRARY_INCLUDES "./")
 
-add_library("LibTask" STATIC ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
-target_link_libraries("LibTask")
-
+add_library(${LIB_TASK_NAME} STATIC ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
+target_include_directories(${LIB_TASK_NAME}  PUBLIC ${LIBRARY_INCLUDES})
+target_link_libraries(${LIB_TASK_NAME})
