@@ -22,7 +22,6 @@ The **Schedulers** repository includes several real-time scheduling algorithms i
 - **Deadline Monotonic Scheduling (DM)**
 - **Earliest Deadline First (EDF)**
 - **Least Laxity First (LLF)**
-- **Least Slack Time (LST)**
 ## Installation
 
 To clone and build this project, ensure you have `git` and a C++ compiler (supporting C++17 or later) installed.
