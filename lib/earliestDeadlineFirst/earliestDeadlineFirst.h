@@ -1,23 +1,24 @@
 #pragma once
 
-#include <vector>
-#include <optional>
-#include <iostream>
+#include <Task.h>
+#include <scheduler.h>
+
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <numeric>
-#include "Task.h"  // Assuming Task.h is in the same directory
+#include <optional>
+#include <vector>
 
-class EarliestDeadlineFirst {
+class EarliestDeadlineFirst : public Scheduler {
    private:
     std::vector<Task> m_tasks;
     int m_lcm;
 
    public:
     explicit EarliestDeadlineFirst(const std::vector<Task>& tasks_input);
-    void calculateLcmFromPeriods();
+    void calculateLcmFromPeriods() override;
     void sortTasksByDeadline(int currentTime);
-    std::optional<bool> isSchedulable();
-    std::vector<int> runEarliestDeadlineFirst();
+    std::optional<bool> isSchedulable() override;
+    std::vector<int> run() override;
 };
-

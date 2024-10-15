@@ -5,4 +5,4 @@ set(LIBRARY_INCLUDES "./")
 
 add_library(${LIB_EDF_NAME} STATIC ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
 target_include_directories(${LIB_EDF_NAME}  PUBLIC ${LIBRARY_INCLUDES} )
-target_link_libraries(${LIB_EDF_NAME} PRIVATE LibTask)
+target_link_libraries(${LIB_EDF_NAME} PRIVATE LibTask LibSH)

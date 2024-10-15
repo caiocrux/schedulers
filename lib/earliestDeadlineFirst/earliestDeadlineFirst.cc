@@ -2,7 +2,7 @@
 
 EarliestDeadlineFirst::EarliestDeadlineFirst(
     const std::vector<Task>& tasks_input)
-    : m_tasks(tasks_input), m_lcm(1) {}
+    : Scheduler(tasks_input) {}
 
 void EarliestDeadlineFirst::calculateLcmFromPeriods() {
     m_lcm = 1;
@@ -34,7 +34,7 @@ std::optional<bool> EarliestDeadlineFirst::isSchedulable() {
                           : std::optional<bool>(false);
 }
 
-std::vector<int> EarliestDeadlineFirst::runEarliestDeadlineFirst() {
+std::vector<int> EarliestDeadlineFirst::run() {
     std::vector<int> schedule(m_lcm, -1);
     int time = 0;
 

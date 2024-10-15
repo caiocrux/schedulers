@@ -185,6 +185,21 @@ std::vector<Task> tasks = {Task(1, 2, 10, 5),
 
 #endif
 
+    auto scheduler = createScheduler(algorithmType, tasks);
+    if (scheduler) {
+        scheduler->calculateLcmFromPeriods();
+        scheduler->sortTasksByPeriod();
+        if (scheduler->isSchedulable().value_or(false)) {
+            std::vector<int> schedule = scheduler->run();
+            for (int id : schedule) {
+                std::cout << "Task ID: " << id << std::endl;
+            }
+        } else {
+            std::cout << "The tasks are not schedulable." << std::endl;
+        }
+    }
+
+/*
     RateMonotonic rmScheduler(tasks);
     rmScheduler.calculateLcmFromPeriods();
     rmScheduler.sortTasksByPeriod();
@@ -215,10 +230,10 @@ std::vector<Task> tasks = {Task(1, 2, 10, 5),
                   << std::endl;
     }
 
-    auto rmSchedule = rmScheduler.runRateMonotonic();
-    auto dmSchedule = dmScheduler.runDeadlineMonotonic();
-    auto edfSchedule = edfScheduler.runEarliestDeadlineFirst();
-    auto llSchedule = llScheduler.runLeastLaxity();
+    auto rmSchedule = rmScheduler.run();
+    auto dmSchedule = dmScheduler.run();
+    auto edfSchedule = edfScheduler.run();
+    auto llSchedule = llScheduler.run();
 
     GanttChart ganttChart;
 
@@ -227,4 +242,5 @@ std::vector<Task> tasks = {Task(1, 2, 10, 5),
     ganttChart.drawGanttChart(edfSchedule, "Earliest Deadline First Chart");
     ganttChart.drawGanttChart(llSchedule, "Least Laxity Chart");
     return 0;
+    */
 }

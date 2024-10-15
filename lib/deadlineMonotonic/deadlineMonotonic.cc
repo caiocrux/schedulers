@@ -1,7 +1,7 @@
 #include "deadlineMonotonic.h"
 
 DeadlineMonotonic::DeadlineMonotonic(const std::vector<Task>& tasks_input)
-    : m_tasks(tasks_input), m_lcm(1) {}
+    :Scheduler(tasks_input)  {}
 
 void DeadlineMonotonic::calculateLcmFromPeriods() {
     m_lcm = 1;
@@ -48,7 +48,7 @@ std::optional<bool> DeadlineMonotonic::isSchedulable() {
     return std::optional<bool>(true);
 }
 
-std::vector<int> DeadlineMonotonic::runDeadlineMonotonic() {
+std::vector<int> DeadlineMonotonic::run() {
     std::vector<int> schedule(m_lcm, -1);
     int time = 0;
 
