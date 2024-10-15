@@ -22,6 +22,18 @@ The **Schedulers** repository includes several real-time scheduling algorithms i
 - **Deadline Monotonic Scheduling (DM)**
 - **Earliest Deadline First (EDF)**
 - **Least Laxity First (LLF)**
+
+## Prerequisites
+
+Before running the application, ensure you have the following installed:
+
+- Python 3.x
+- NumPy: You can install it using pip3:
+
+  ```bash
+  pip3 install numpy
+
+
 ## Installation
 
 To clone and build this project, ensure you have `git` and a C++ compiler (supporting C++17 or later) installed.
