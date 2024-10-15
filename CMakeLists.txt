@@ -23,5 +23,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(matplotlib-cpp)
 
+FetchContent_Declare(
+  cxxopts
+  GIT_REPOSITORY https://github.com/jarro2783/cxxopts.git
+  GIT_TAG v3.2.1
+)
+FetchContent_MakeAvailable(cxxopts)
+
 add_subdirectory(lib)
 add_subdirectory(app)

@@ -30,6 +30,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cxxopts.hpp>
 #include <fstream>  // for file output
 #include <iostream>
 #include <map>
@@ -37,8 +38,77 @@
 #include <optional>  // std::optional
 #include <vector>
 
-// int main(int argc, char **argv) {
-int main(void) {
+int main(int argc, char **argv) {
+    // int main(void) {
+    cxxopts::Options options(
+        "Scheduler", "A program to schedule tasks using various algorithms");
+
+    options.add_options()(
+        "algorithm",
+        "Specify the scheduling algorithm (RateMonotonic, DeadlineMonotonic, "
+        "EarliestDeadlineFirst, LeastLaxity)",
+        cxxopts::value<std::string>())(
+        "tasks", "Specify the tasks in the format: 'id,cpu_time,period,dealine'",
+        cxxopts::value<std::string>())
+        ("help", "Show help");
+    
+    auto result = options.parse(argc, argv);
+
+    if (result.count("help")) {
+        std::cout << options.help() << std::endl;
+        return 0;
+    }
+
+    if (!result.count("algorithm") || !result.count("tasks")) {
+        std::cerr << "Error: Algorithm and tasks must be specified."
+                  << std::endl;
+        std::cerr << options.help() << std::endl;
+        return 1;
+    }
+
+    std::string algorithmType = result["algorithm"].as<std::string>();
+    std::cout << "Selected algorithm: " << algorithmType << std::endl;
+
+    std::vector<Task> tasks;
+    //auto taskStrings = result["tasks"].as<std::vector<std::string>>();
+    std::string taskStrings = result["tasks"].as<std::string>();
+
+
+    // Split tasks by semicolon
+    std::istringstream taskStream(taskStrings);
+    std::string task_str;
+    while (std::getline(taskStream, task_str, ';')) {
+        std::cout << "Parsing task: " << task_str << std::endl;
+        int id, cpu_time, period, deadline;
+        char comma1, comma2, comma3;
+        std::istringstream iss(task_str);
+
+        if (iss >> id >> comma1 >> cpu_time >> comma2 >> period >> comma3 >> deadline &&
+            comma1 == ',' && comma2 == ',' && comma3 == ',') {
+            tasks.emplace_back(id, cpu_time, period, deadline);
+            std::cout << "Added task: ID=" << id << ", CPU Time=" << cpu_time << ", Period=" << period << ", Deadline=" << deadline << std::endl;
+        } else {
+            std::cerr << "Invalid task format: " << task_str << std::endl;
+            return 1;
+        }
+    }
+
+    std::cout << "Total tasks parsed: " << tasks.size() << std::endl;
+
+    // Parse the tasks from the command line
+/*    for (const auto &task_str :
+        result["tasks"].as<std::vector<std::string>>()) {
+        int id, cpu_time, period, deadline;
+        char comma;  // For parsing commas
+        std::istringstream iss(task_str);
+        if (iss >> id >> comma >> cpu_time >> comma >> period >> comma >>
+            deadline) {
+            tasks.emplace_back(id, cpu_time, period, deadline);
+        } else {
+            std::cerr << "Invalid task format: " << task_str << std::endl;
+            return 1;
+        }
+    }
     //  int n;
     //  std::cout << "Digite o número de tarefas: ";
     //  std::cin >> n;
@@ -106,7 +176,7 @@ std::vector<Task> tasks = {Task(1, 2, 10, 5),
                              Task(4, 4, 13, 13)};
   std::string task1_img = "Tabela_1.csv";
 #endif
-#if 1
+#if 0
     std::vector<Task> tasks = {Task(1, 2, 7, 7), Task(2, 3, 12, 12),
                                Task(3, 2, 5, 5)};
     //                               Task(3, 1, 20, 20)};
