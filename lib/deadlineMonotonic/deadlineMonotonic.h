@@ -11,10 +11,6 @@
 #include <vector>
 
 class DeadlineMonotonic : public Scheduler {
-   private:
-    std::vector<Task> m_tasks;
-    int m_lcm;
-
    public:
     explicit DeadlineMonotonic(const std::vector<Task>& tasks_input);
     void calculateLcmFromPeriods() override;

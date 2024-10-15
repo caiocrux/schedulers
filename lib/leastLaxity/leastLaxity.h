@@ -10,10 +10,6 @@
 #include <vector>
 
 class LeastLaxity : public Scheduler {
-   private:
-    std::vector<Task> m_tasks;
-    int m_lcm;
-
    public:
     explicit LeastLaxity(const std::vector<Task>& tasks_input);
     void calculateLcmFromPeriods() override;

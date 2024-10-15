@@ -1,7 +1,9 @@
 #include "rateMonotonic.h"
 
 RateMonotonic::RateMonotonic(const std::vector<Task>& tasks_input)
-    :Scheduler(tasks_input) {}
+    : Scheduler(tasks_input) {
+    sortTasksByPeriod();
+}
 
 void RateMonotonic::calculateLcmFromPeriods() {
     m_lcm = 1;
