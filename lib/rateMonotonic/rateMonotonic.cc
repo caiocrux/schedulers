@@ -1,7 +1,9 @@
 #include "rateMonotonic.h"
 
 RateMonotonic::RateMonotonic(const std::vector<Task>& tasks_input)
-    : m_tasks(tasks_input), m_lcm(1) {}
+    : Scheduler(tasks_input) {
+    sortTasksByPeriod();
+}
 
 void RateMonotonic::calculateLcmFromPeriods() {
     m_lcm = 1;
@@ -11,7 +13,7 @@ void RateMonotonic::calculateLcmFromPeriods() {
     std::cout << "LCM: " << m_lcm << std::endl;
 }
 
-std::optional<bool> RateMonotonic::isSchedulable() const {
+std::optional<bool> RateMonotonic::isSchedulable() {
     double U = 0;
     int n = m_tasks.size();
 
@@ -32,7 +34,7 @@ void RateMonotonic::sortTasksByPeriod() {
               [](const Task& a, const Task& b) { return a.getT() < b.getT(); });
 }
 
-std::vector<int> RateMonotonic::runRateMonotonic() {
+std::vector<int> RateMonotonic::run() {
     std::vector<int> schedule(m_lcm, -1);
     int time = 0;
 

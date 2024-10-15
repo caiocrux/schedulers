@@ -1,7 +1,7 @@
 #include "leastLaxity.h"
 
 LeastLaxity::LeastLaxity(const std::vector<Task>& tasks_input)
-    : m_tasks(tasks_input), m_lcm(1) {}
+    :Scheduler(tasks_input) {}
 
 void LeastLaxity::calculateLcmFromPeriods() {
     m_lcm = 1;
@@ -11,7 +11,7 @@ void LeastLaxity::calculateLcmFromPeriods() {
     std::cout << "LCM: " << m_lcm << std::endl;
 }
 
-std::optional<bool> LeastLaxity::isSchedulable() const {
+std::optional<bool> LeastLaxity::isSchedulable() {
     return std::optional<bool>(true);  // Placeholder for schedulability check
 }
 
@@ -26,7 +26,7 @@ void LeastLaxity::sortTasksByLaxity(int currentTime) {
               });
 }
 
-std::vector<int> LeastLaxity::runLeastLaxity() {
+std::vector<int> LeastLaxity::run() {
     std::vector<int> schedule(m_lcm, -1);
     int time = 0;
 

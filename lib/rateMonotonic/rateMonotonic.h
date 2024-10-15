@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Task.h>
+#include <scheduler.h>
 
 #include <algorithm>
 #include <cmath>
@@ -9,15 +10,11 @@
 #include <optional>
 #include <vector>
 
-class RateMonotonic {
-   private:
-    std::vector<Task> m_tasks;
-    int m_lcm;
-
+class RateMonotonic : public Scheduler {
    public:
     explicit RateMonotonic(const std::vector<Task>& tasks_input);
-    void calculateLcmFromPeriods();
-    std::optional<bool> isSchedulable() const;
+    void calculateLcmFromPeriods() override;
+    std::optional<bool> isSchedulable() override;
     void sortTasksByPeriod();
-    std::vector<int> runRateMonotonic();
+    std::vector<int> run() override;
 };
