@@ -8,10 +8,11 @@
 
 #include "matplotlibcpp.h"  // Assuming matplotlibcpp is in your include path
 
-namespace plt = matplotlibcpp;
-
 class GanttChart {
    public:
+    // Destructor to kill the matplotlib interpreter
+    ~GanttChart();
+
     void saveToCSV(const std::vector<int>& schedule,
                    const std::string& filename);
     void drawGanttChart(const std::vector<int>& schedule, std::string title);

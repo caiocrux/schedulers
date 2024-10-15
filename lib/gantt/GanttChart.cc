@@ -1,5 +1,10 @@
 #include "GanttChart.h"
 
+namespace plt = matplotlibcpp;
+// Destructor created based on this to avoid core dump
+// https://github.com/lava/matplotlib-cpp/issues/351
+GanttChart::~GanttChart() { plt::detail::_interpreter::kill(); }
+
 void GanttChart::saveToCSV(const std::vector<int>& schedule,
                            const std::string& filename) {
     std::ofstream file(filename);
@@ -60,6 +65,4 @@ void GanttChart::drawGanttChart(const std::vector<int>& schedule,
     plt::legend();
     // Show the chart
     plt::show();
-    // Clear the figure after saving (optional)
-    plt::clf();
 }
