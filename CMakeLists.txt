@@ -10,9 +10,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Options
+option(ENABLE_TESTING "Enable a Unit Testing build." ON)
+
 # Project/Library Names
 set(EXECUTABLE_NAME "scheduler")
 
+# Project/Library Names
+set(UNIT_TEST_NAME "unit_tests")
 
 include(FetchContent)
 
@@ -30,5 +35,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cxxopts)
 
+FetchContent_Declare(
+    catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.7.1  # Or latest stable version
+)
+FetchContent_MakeAvailable(catch2)
+
 add_subdirectory(lib)
 add_subdirectory(app)
+add_subdirectory(tests)
